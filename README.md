@@ -8,7 +8,7 @@ A few of the changes are as follows:
 - Tapes are now exactly 2048 Bytes long (2KiB per tape totaling 32KiB of memory)
 
 ## What?
-The easiest way to visualize the new memory layout is to think of it as all 8 tapes being stacked on top of each-other into one large "Roll" that spins along its top and bottom faces.
+The easiest way to visualize the new memory layout is to think of it as all 16 tapes being stacked on top of each-other into one large "Roll" that spins along its top and bottom faces.
 
 When the pointer is moved left or right think of it as spinning the roll to the left or right as when it goes off one end it loops to the other.
 
