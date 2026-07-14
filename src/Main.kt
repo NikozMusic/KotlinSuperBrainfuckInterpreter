@@ -1,5 +1,9 @@
 import java.io.File
 
+/*
+    This program is an Interpreter for the SuperBrainFuck esolang made by NikozMusic based on the original
+    Brainfuck esolang by Urban Müller written in Kotlin.
+ */
 
 //Maim Function
 fun main(args: Array<String>) {
@@ -39,11 +43,21 @@ fun main(args: Array<String>) {
             '[' -> startStack.add(i)
 
             ']' -> {
+                if (startStack.isEmpty()) {
+                    println("Error: unmatched ] at position $i")
+                    return
+                }
+
                 val start = startStack.removeLast()
                 loops[start] = i
                 loops[i] = start
             }
         }
+    }
+    //cleanup
+    if (startStack.isNotEmpty()) {
+        println("Error: unmatched [ at position ${startStack.last()}")
+        return
     }
 
     //Unlike the other statements these are Variables instead of Values meaning they can have their value changed
@@ -60,24 +74,47 @@ fun main(args: Array<String>) {
             its functions defined in one big "When" statement.
          */
         when(program[stepper]) {
-            '+' -> roll[tape][pointer]++ //Increase byte at selected box
-            '-' -> roll[tape][pointer]-- //Decrease byte at selected box
-            '>' -> pointer = (pointer + 1) % 1024 //Move pointer right
-            '<' -> pointer = (pointer + 1023) % 1024 //Move pointer left
-            '.' -> print(roll[tape][pointer].toInt().toChar()) //Print character at selected box
-            ',' -> roll[tape][pointer] = readln()[0].code.toUByte() //Read input from terminal
-            '[' -> { //Begin loop
+            //Increase byte at selected box
+            '+' -> roll[tape][pointer]++
+
+            //Decrease byte at selected box
+            '-' -> roll[tape][pointer]--
+
+            //Move pointer
+            '<' -> pointer = (pointer + 1023) % 1024 //Left
+            '>' -> pointer = (pointer + 1) % 1024 //Right
+
+            //Print character at selected box
+            '.' -> print(roll[tape][pointer].toInt().toChar())
+
+            //Read single character input from terminal
+            ',' -> roll[tape][pointer] = readln()[0].code.toUByte()
+
+            //Loop instructions
+            '[' -> {
                 if (roll[tape][pointer] == 0.toUByte()) {
                     stepper = loops[stepper]!!
                 }
             }
-            ']' -> { //End loop
+            ']' -> {
                 if (roll[tape][pointer] != 0.toUByte()) {
                     stepper = loops[stepper]!!
                 }
             }
-            '/' -> tape = (tape + 1) % 8
-            '\\' -> tape = (tape + 7) % 8
+
+            //Navigate selected tapes
+            '/' -> tape = (tape + 1) % 8  //Up
+            '\\' -> tape = (tape + 7) % 8 //Down
+
+            //Randomize the selected byte
+            '?' -> roll[tape][pointer] = (0..255).random().toUByte()
+
+            //Reset tape and pointer positions
+            '@' -> {
+                tape = 0
+                pointer = 0
+            }
+
         }
 
         //Advance to the next character in the program file
@@ -87,7 +124,7 @@ fun main(args: Array<String>) {
 }
 
 
-//This simple function pulls the text out of the .sbf file and turns it into something the program can use later
+//This simple function pulls the text out of the .sbf file and turns it into a string the program can use later
 fun initializeProgram(filepath: String): String {
     val content = File(filepath).readText()
     return content
