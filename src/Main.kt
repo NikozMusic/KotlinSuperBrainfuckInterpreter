@@ -49,7 +49,7 @@ fun main(args: Array<String>) {
     //Unlike the other statements these are Variables instead of Values meaning they can have their value changed
     var pointer = 0
     var tape = 0
-    var stepper: Int = 0
+    var stepper = 0
 
 
     //Main Loop
