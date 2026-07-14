@@ -3,9 +3,9 @@ SuperBrainfuck asks of "what if brainfuck had 16 instructions instead of 8".
 Using this simple change I was able to formulate a complete expansion of the language while staying within its original design goals.
 
 A few of the changes are as follows:
-- There are now 8 Tapes stacked in a "Roll" effectively turning the bit plane into a grid
+- There are now 16 Tapes stacked in a "Roll" effectively turning the bit plane into a grid
 - Each tape shares the same pointer allowing you to jump to a location on another tape
-- Tapes are now exactly 1024 Bytes long (Making one KiB per tape totaling 8KiB of memory)
+- Tapes are now exactly 2048 Bytes long (2KiB per tape totaling 32KiB of memory)
 
 ## What?
 The easiest way to visualize the new memory layout is to think of it as all 8 tapes being stacked on top of each-other into one large "Roll" that spins along its top and bottom faces.

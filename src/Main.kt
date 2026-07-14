@@ -26,11 +26,14 @@ fun main(args: Array<String>) {
         return
     }
 
+    val TAPES = 16 //Default 16
+    val TAPE_SIZE = 2048 //Default 2048
+
     /*
-        Here we set up the roll, this contains 8 tapes of 1024 bytes totaling 8KiB of usable memory exactly,
+        Here we set up the roll, this contains 16 tapes of 2048 bytes totaling 32KiB of usable memory by default exactly,
         Though these values are arbitrary and can be changed between interpreters this is the recommended setup.
      */
-    val roll = MutableList(8) { MutableList(1024) { 0.toUByte()} }
+    val roll = MutableList(TAPES) { MutableList(TAPE_SIZE) { 0.toUByte()} }
 
     val loops = mutableMapOf<Int, Int>()
     val startStack = mutableListOf<Int>()
