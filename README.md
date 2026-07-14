@@ -2,7 +2,7 @@
 
 ## Click [Here](https://nikozmusic.github.io/visualsuperbrainfuck.github.io/) for a Visual Webapp interpreter
 
-SuperBrainfuck asks of "what if brainfuck had 16 instructions instead of 8".
+SuperBrainfuck asks "what if brainfuck had 16 instructions instead of 8".
 Using this simple change I was able to formulate a complete expansion of the language while staying within its original design goals.
 
 A few of the changes are as follows:
