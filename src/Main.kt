@@ -84,8 +84,8 @@ fun main(args: Array<String>) {
             '-' -> roll[tape][pointer]--
 
             //Move pointer
-            '<' -> pointer = (pointer + 1023) % 1024 //Left
-            '>' -> pointer = (pointer + 1) % 1024 //Right
+            '<' -> pointer = (pointer + TAPE_SIZE - 1) % TAPE_SIZE //Move pointer left
+            '>' -> pointer = (pointer + 1) % TAPE_SIZE //Move pointer right
 
             //Print character at selected box
             '.' -> print(roll[tape][pointer].toInt().toChar()) //Print ASCII
@@ -107,8 +107,8 @@ fun main(args: Array<String>) {
             }
 
             //Navigate selected tapes
-            '/' -> tape = (tape + 1) % 8  //Up
-            '\\' -> tape = (tape + 7) % 8 //Down
+            '/' -> tape = (tape + 1) % TAPES  //Up
+            '\\' -> tape = (tape + TAPES - 1) % TAPES //Down
             '$' -> tape = 0 //Floor
 
             //Randomize the selected byte
@@ -121,8 +121,8 @@ fun main(args: Array<String>) {
             }
 
             //Copy to another tape
-            '^' -> roll[(tape + 1) % 8][pointer] = roll[tape][pointer]
-            '_' -> roll[(tape + 7) % 8][pointer] = roll[tape][pointer]
+            '^' -> roll[(tape + 1) % TAPES][pointer] = roll[tape][pointer]
+            '_' -> roll[(tape + (TAPES-1)) % TAPES][pointer] = roll[tape][pointer]
 
         }
 
