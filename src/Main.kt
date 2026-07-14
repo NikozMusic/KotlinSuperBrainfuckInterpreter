@@ -4,17 +4,29 @@ import java.io.File
 //Maim Function
 fun main(args: Array<String>) {
 
-    //According to brainfuck.net/learn a tape has 30000 "boxes" exactly.
-    //Boxes being what it calls bytes that are in the tape
-    val tape = MutableList(30000) { 0.toUByte() }
+    /*
+        This is where the file is first initialized and checked, right at the top so we don't waste any time processing
+        and invalid or nonexistent file.
+     */
+    val file = if (args.isNotEmpty()) File(args[0]) else null
 
-    //Initialize the program file
-    val program = if (args.isNotEmpty()) {
-        initializeProgram(args[0])
-    } else {
-        println("Please specify a file to run")
+    val program = if ( //Check if the file...
+        file != null && //Is not null... (e.g. if they actually put anything)
+        file.exists() && //Exists...
+        file.isFile && //Is a file and not a directory...
+        file.extension.equals("sbf", ignoreCase = true) //And if it's a .sbf file
+    ) {
+        initializeProgram(file.path)
+    } else { //If the input fails any of these checks tell the user it's not valid then return to terminal
+        println("Please specify a valid .sbf (SuperBrainFuck) file to run.")
         return
     }
+
+    /*
+        Here we set up the roll, this contains 8 tapes of 1024 bytes totaling 8KiB of usable memory exactly,
+        Though these values are arbitrary and can be changed between interpreters this is the recommended setup.
+     */
+    val roll = MutableList(8) { MutableList(1024) { 0.toUByte()} }
 
     val loops = mutableMapOf<Int, Int>()
     val startStack = mutableListOf<Int>()
@@ -34,41 +46,48 @@ fun main(args: Array<String>) {
         }
     }
 
-    //Variables can be changed later opposed to Values which cant
+    //Unlike the other statements these are Variables instead of Values meaning they can have their value changed
     var pointer = 0
+    var tape = 0
     var stepper: Int = 0
 
 
     //Main Loop
     while (stepper < program.length) {
 
-
-        //This is where you would add your own syntax
+        /*
+            This part of the code is the meat and potatoes of the entire script as this is where each syntax character has
+            its functions defined in one big "When" statement.
+         */
         when(program[stepper]) {
-            '+' -> tape[pointer]++
-            '-' -> tape[pointer]--
-            '>' -> pointer++
-            '<' -> pointer--
-            '.' -> print(tape[pointer].toInt().toChar())
-            ',' -> tape[pointer] = readln()[0].code.toUByte()
-            '[' -> {
-                if(tape[pointer] == 0.toUByte()) {
+            '+' -> roll[tape][pointer]++ //Increase byte at selected box
+            '-' -> roll[tape][pointer]-- //Decrease byte at selected box
+            '>' -> pointer = (pointer + 1) % 1024 //Move pointer right
+            '<' -> pointer = (pointer + 1023) % 1024 //Move pointer left
+            '.' -> print(roll[tape][pointer].toInt().toChar()) //Print character at selected box
+            ',' -> roll[tape][pointer] = readln()[0].code.toUByte() //Read input from terminal
+            '[' -> { //Begin loop
+                if (roll[tape][pointer] == 0.toUByte()) {
                     stepper = loops[stepper]!!
                 }
             }
-            ']' -> {
-                if (tape[pointer] != 0.toUByte()) {
+            ']' -> { //End loop
+                if (roll[tape][pointer] != 0.toUByte()) {
                     stepper = loops[stepper]!!
                 }
             }
+            '/' -> tape = (tape + 1) % 8
+            '\\' -> tape = (tape + 7) % 8
         }
 
-        //Go to next program step
+        //Advance to the next character in the program file
         stepper++
     }
 
 }
 
+
+//This simple function pulls the text out of the .sbf file and turns it into something the program can use later
 fun initializeProgram(filepath: String): String {
     val content = File(filepath).readText()
     return content
