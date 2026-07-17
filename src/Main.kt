@@ -26,14 +26,14 @@ fun main(args: Array<String>) {
         return
     }
 
-    val TAPES = 16 //Default 16
-    val TAPE_SIZE = 2048 //Default 2048
+    val tapes = 16 //Default 16
+    val tape_size = 2048 //Default 2048
 
     /*
         Here we set up the roll, this contains 16 tapes of 2048 bytes totaling 32KiB of usable memory by default exactly,
         Though these values are arbitrary and can be changed between interpreters this is the recommended setup.
      */
-    val roll = MutableList(TAPES) { MutableList(TAPE_SIZE) { 0.toUByte()} }
+    val roll = MutableList(tapes) { MutableList(tape_size) { 0.toUByte()} }
 
     val loops = mutableMapOf<Int, Int>()
     val startStack = mutableListOf<Int>()
@@ -84,8 +84,8 @@ fun main(args: Array<String>) {
             '-' -> roll[tape][pointer]--
 
             //Move pointer
-            '<' -> pointer = (pointer + TAPE_SIZE - 1) % TAPE_SIZE //Move pointer left
-            '>' -> pointer = (pointer + 1) % TAPE_SIZE //Move pointer right
+            '<' -> pointer = (pointer + tape_size - 1) % tape_size //Move pointer left
+            '>' -> pointer = (pointer + 1) % tape_size //Move pointer right
 
             //Print character at selected box
             '.' -> print(roll[tape][pointer].toInt().toChar()) //Print ASCII
@@ -107,8 +107,8 @@ fun main(args: Array<String>) {
             }
 
             //Navigate selected tapes
-            '/' -> tape = (tape + 1) % TAPES  //Up
-            '\\' -> tape = (tape + TAPES - 1) % TAPES //Down
+            '/' -> tape = (tape + 1) % tapes  //Up
+            '\\' -> tape = (tape + tapes - 1) % tapes //Down
             '$' -> tape = 0 //Floor
 
             //Randomize the selected byte
@@ -121,8 +121,8 @@ fun main(args: Array<String>) {
             }
 
             //Copy to another tape
-            '^' -> roll[(tape + 1) % TAPES][pointer] = roll[tape][pointer]
-            '_' -> roll[(tape + (TAPES-1)) % TAPES][pointer] = roll[tape][pointer]
+            '^' -> roll[(tape + 1) % tapes][pointer] = roll[tape][pointer]
+            '_' -> roll[(tape + (tapes-1)) % tapes][pointer] = roll[tape][pointer]
 
         }
 
